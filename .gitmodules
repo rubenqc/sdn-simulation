@@ -1,0 +1,6 @@
+[submodule "docker-odl"]
+	path = opendaylight
+	url = git@github.com:rubenqc/docker-odl.git
+[submodule "docker-mininet"]
+	path = mininet
+	url = git@github.com:rubenqc/docker-mininet.git
