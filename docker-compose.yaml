@@ -1,34 +1,41 @@
 version: "3.9"
 services:
   mininet:
-    image: "opennetworking/mn-stratum"
-    privileged: true
+    build:
+      context: .
+    image: rubenqc/mininet
     tty: true
+    ports:
+      - "6653:6653"
+    network_mode: "bridge"
+    privileged: true
     environment:
       - DISPLAY
     volumes:
-      - /tmp/mn-stratum:/tmp
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /lib/modules:/lib/modules
     depends_on:
       - "odl"
-    networks:
-      vpcbr:
-        ipv4_address: 10.5.0.5
+#    networks:
+#      vpcbr:
+#        ipv4_address: 10.5.0.5
     command:
       - bash -c "echo enomine"
-#      - mn --controller=remote,ip=10.5.0.6,port=6653 --mac --switch=ovsk,protocols=OpenFlow13 --topo=single,3
+#      - mn --controller=remote,ip=172.17.0.2,port=6640 --mac --switch=ovsk,protocols=OpenFlow13 --topo=single,3
   odl:
     image: "rubenqc/odl"
     tty: true
     ports:
       - "8181:8181"
-      - "6653:6653"
-    networks:
-      vpcbr:
-        ipv4_address: 10.5.0.6
-networks:
-  vpcbr:
-    driver: bridgedco
-    ipam:
-      config:
-        - subnet: 10.5.0.0/16
-          gateway: 10.5.0.1
+      - "6640:6640"
+    network_mode: "bridge"
+#    networks:
+#      vpcbr:
+#        ipv4_address: 10.5.0.6
+#networks:
+#  vpcbr:
+#    driver: bridgedco
+#    ipam:
+#      config:
+#        - subnet: 10.5.0.0/16
+#          gateway: 10.5.0.1
