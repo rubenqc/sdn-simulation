@@ -4,3 +4,6 @@
 [submodule "docker-mininet"]
 	path = mininet
 	url = git@github.com:rubenqc/docker-mininet.git
+[submodule "airdaneel"]
+	path = airdaneel
+	url = git@github.com:rubenqc/airdaneel-sdn.git
