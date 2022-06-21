@@ -4,9 +4,8 @@ services:
     build:
       context: .
     image: rubenqc/mininet
+    stdin_open: true
     tty: true
-    ports:
-      - "6653:6653"
     network_mode: "bridge"
     privileged: true
     environment:
@@ -14,28 +13,12 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /lib/modules:/lib/modules
+      - ./init_mininet.sh:/ENTRYPOINT.sh
     depends_on:
       - "odl"
-#    networks:
-#      vpcbr:
-#        ipv4_address: 10.5.0.5
-    command:
-      - bash -c "echo enomine"
-#      - mn --controller=remote,ip=172.17.0.2,port=6640 --mac --switch=ovsk,protocols=OpenFlow13 --topo=single,3
   odl:
     image: "rubenqc/odl"
     tty: true
     ports:
       - "8181:8181"
-      - "6640:6640"
     network_mode: "bridge"
-#    networks:
-#      vpcbr:
-#        ipv4_address: 10.5.0.6
-#networks:
-#  vpcbr:
-#    driver: bridgedco
-#    ipam:
-#      config:
-#        - subnet: 10.5.0.0/16
-#          gateway: 10.5.0.1
