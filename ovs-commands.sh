@@ -5,18 +5,18 @@ ovs-vsctl show
 #    4ace4ce6-c77a-480a-977b-d003977d363c
 #    Manager "ptcp:6640"
 #    Bridge "s1"
-#        Controller "tcp:172.17.0.2:6640"
-#        Controller "ptcp:6654"
+#        Controller "tcp:172.17.0.3:6633"
+#            is_connected: true
 #        fail_mode: secure
-#        Port "s1-eth3"
-#            Interface "s1-eth3"
 #        Port "s1-eth2"
 #            Interface "s1-eth2"
-#        Port "s1-eth1"
-#            Interface "s1-eth1"
+#        Port "s1-eth3"
+#            Interface "s1-eth3"
 #        Port "s1"
 #            Interface "s1"
 #                type: internal
+#        Port "s1-eth1"
+#            Interface "s1-eth1"
 #    ovs_version: "2.9.8"
 
 #################
@@ -47,3 +47,13 @@ ovs-ofctl show s1 -O OpenFlow13
 #         state:      LINK_DOWN
 #         speed: 0 Mbps now, 0 Mbps max
 #    OFPT_GET_CONFIG_REPLY (OF1.3) (xid=0x7): frags=normal miss_send_len=0
+
+#################
+# Set remote controller
+ovs-vsctl set-controller s1 tcp:172.17.0.3:6633
+# output empty:
+
+#################
+# Delete all controllers of bridge
+ovs-vsctl del-controller s1
+# output empty:
