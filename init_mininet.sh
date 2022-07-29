@@ -2,6 +2,7 @@
 
 # start ovs service
 service openvswitch-switch start
+ovs-vsctl set-manager ptcp:6640
 
 # start mininet scenario
 echo " * Custom: Start Mininet"
