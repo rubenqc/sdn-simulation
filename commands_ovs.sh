@@ -57,3 +57,35 @@ ovs-vsctl set-controller s1 tcp:172.17.0.3:6633
 # Delete all controllers of bridge
 ovs-vsctl del-controller s1
 # output empty:
+
+#################
+# Dump Flows
+ovs-ofctl dump-flows s1 -O OpenFlow13
+# output:
+#    cookie=0xa, duration=108.137s, table=0, n_packets=38, n_bytes=2864, send_flow_rem priority=0 actions=CONTROLLER:65535
+#    cookie=0x0, duration=17.164s, table=0, n_packets=0, n_bytes=0, actions=NORMAL
+
+#################
+# Add Flow
+## Setup SW Normal
+ovs-ofctl add-flow s1 action=normal -O OpenFlow13
+## Setup SW Layer 1
+ovs-ofctl add-flow s1 priority=500,in_port=1,actions=output:2 -O OpenFlow13
+ovs-ofctl add-flow s1 priority=500,in_port=2,actions=output:1 -O OpenFlow13
+## Setup SW Layer 2
+ovs-ofctl add-flow s1 dl_src=00:00:00:00:00:01,dl_dst=00:00:00:00:00:02,actions=output:2 -O OpenFlow13
+ovs-ofctl add-flow s1 dl_src=00:00:00:00:00:02,dl_dst=00:00:00:00:00:01,actions=output:1 -O OpenFlow13
+sh ovs-ofctl add-flow s1 dl_type=0x806,nw_proto=1,action=flood # enable ARP
+#ovs-ofctl add-flow s1 dl_src=16:b0:2e:50:1e:d5,dl_dst=da:78:7c:33:2a:2f,actions=output:2 -O OpenFlow13
+#ovs-ofctl add-flow s1 dl_src=da:78:7c:33:2a:2f,dl_dst=16:b0:2e:50:1e:d5,actions=output:1 -O OpenFlow13
+## Setup SW Layer 3
+ovs-ofctl add-flow s1 priority=500,dl_type=0x800,nw_src=10.0.0.0/24,nw_dst=10.0.0.0/24,actions=normal -O OpenFlow13
+ovs-ofctl add-flow s1 arp,nw_dst=10.0.0.1,actions=output:1 -O OpenFlow13 # enable ARP
+ovs-ofctl add-flow s1 arp,nw_dst=10.0.0.2,actions=output:2 -O OpenFlow13 # enable ARP
+ovs-ofctl add-flow s1 arp,nw_dst=10.0.0.3,actions=output:3 -O OpenFlow13 # enable ARP
+
+
+#################
+# Delete Flows
+ovs-ofctl del-flows s1 -O OpenFlow13
+# output empty:
